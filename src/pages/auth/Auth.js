@@ -5,6 +5,7 @@ import { faSearch, faUsers, faComment } from '@fortawesome/free-solid-svg-icons'
 
 import BasicModal from '../../components/Modal/BasicModal';
 import SignUpForm from '../../components/SignUpForm' 
+import SignInForm from '../../components/SignInForm';
 
 import LogoWhite from '../../assets/img/logo-white.png';
 import Logo from '../../assets/img/logo.png';
@@ -81,7 +82,7 @@ function RightComponent(props) {
         </Button>
         <Button 
           variant="outline-primary"
-          onClick={() => openModal(<h2>Formulario de Iniciar sesión</h2>)}
+          onClick={() => openModal(<SignInForm />)}
         >
           Inicar sesión
         </Button>

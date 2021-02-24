@@ -6,17 +6,54 @@ import {
   Button,
   Spinner
 } from 'react-bootstrap';
+import { values, size } from 'lodash';
+import { toast } from 'react-toastify';
 
+import { isEmailValid } from '../../utils/validations'
+import { signUpApi } from '../../api/auth';
 import './SignUpForm.scss'
 
 export default function SignUpForm(props) {
   const { setShowModal } = props;
   const [formtData, setFormData] = useState(initialFormValue());
-  
+  const [signUpLoading, setSignUpLoading] = useState(false);
+
+
   const onSubmit = e => {
     e.preventDefault();
-    setShowModal(false);
-    console.log(formtData);
+    let validCount = 0;
+    
+    values(formtData).some(value => {
+      value && validCount++
+      return null
+    });
+    if (validCount !== size(formtData)) {
+      toast.warning("Completa todos los campos del formulario")
+    } else {
+      if (!isEmailValid(formtData.email)) {
+        toast.error("Email invalido");
+      } else if (formtData.password !== formtData.repeatPassword) {
+        toast.error("La contraseña no coincide");
+      } else if(size(formtData.password) < 6) {
+        toast.error("La contraseña tiene que tener al menos 6 caracteres")
+      } else {
+        setSignUpLoading(true)
+        signUpApi(formtData)
+          .then(response => {
+            if (response.code) {
+              toast.warning(response.message)
+            } else {
+              toast.success("OK")
+              setShowModal(false);
+              setFormData(initialFormValue)
+            }
+          }).catch(() => {
+            toast.error("Error del servidor intertar mas tarde")
+          }).finally(() => {
+            setSignUpLoading(false);
+          });
+      }
+    }
   };
 
   const onChange = e => {
@@ -32,7 +69,7 @@ export default function SignUpForm(props) {
           <Col> 
             <Form.Control
               type="text"
-              name="nombre"
+              name="name"
               placeholder="Nombre"
               defaultValue={formtData.nombre}
             />    
@@ -40,7 +77,7 @@ export default function SignUpForm(props) {
           <Col> 
             <Form.Control 
               type="text"
-              name="apellido"
+              name="lastname"
               placeholder="Apellidos"
               defaultValue={formtData.apellido}
             />    
@@ -79,7 +116,7 @@ export default function SignUpForm(props) {
       </Form.Group>
 
       <Button variant="primary" type="submit">
-        Registrarse
+        { !signUpLoading ? "Registrarse" : <Spinner animation="border"/>}
       </Button>
     </Form>
    </div>
@@ -89,8 +126,8 @@ export default function SignUpForm(props) {
 
 function initialFormValue() {
   return {
-    nombre: "",
-    apellido: "",
+    name: "",
+    lastname: "",
     email: "",
     password: "",
     repeatPassword: ""
