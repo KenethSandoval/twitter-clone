@@ -15,7 +15,7 @@ import './SignUpForm.scss'
 
 export default function SignUpForm(props) {
   const { setShowModal } = props;
-  const [formtData, setFormData] = useState(initialFormValue());
+  const [formData, setFormData] = useState(initialFormValue());
   const [signUpLoading, setSignUpLoading] = useState(false);
 
 
@@ -23,22 +23,22 @@ export default function SignUpForm(props) {
     e.preventDefault();
     let validCount = 0;
     
-    values(formtData).some(value => {
+    values(formData).some(value => {
       value && validCount++
       return null
     });
-    if (validCount !== size(formtData)) {
+    if (validCount !== size(formData)) {
       toast.warning("Completa todos los campos del formulario")
     } else {
-      if (!isEmailValid(formtData.email)) {
+      if (!isEmailValid(formData.email)) {
         toast.error("Email invalido");
-      } else if (formtData.password !== formtData.repeatPassword) {
+      } else if (formData.password !== formData.repeatPassword) {
         toast.error("La contraseña no coincide");
-      } else if(size(formtData.password) < 6) {
+      } else if(size(formData.password) < 6) {
         toast.error("La contraseña tiene que tener al menos 6 caracteres")
       } else {
         setSignUpLoading(true)
-        signUpApi(formtData)
+        signUpApi(formData)
           .then(response => {
             if (response.code) {
               toast.warning(response.message)
@@ -57,7 +57,7 @@ export default function SignUpForm(props) {
   };
 
   const onChange = e => {
-    setFormData({ ...formtData, [e.target.name]: e.target.value })
+    setFormData({ ...formData, [e.target.name]: e.target.value })
   };
 
   return (
@@ -71,7 +71,7 @@ export default function SignUpForm(props) {
               type="text"
               name="name"
               placeholder="Nombre"
-              defaultValue={formtData.nombre}
+              defaultValue={formData.nombre}
             />    
           </Col>
           <Col> 
@@ -79,7 +79,7 @@ export default function SignUpForm(props) {
               type="text"
               name="lastname"
               placeholder="Apellidos"
-              defaultValue={formtData.apellido}
+              defaultValue={formData.apellido}
             />    
           </Col>
         </Row>
@@ -90,7 +90,7 @@ export default function SignUpForm(props) {
           type="email" 
           placeholder="Correo Electronico"  
           name="email"
-          defaultValue={formtData.email}
+          defaultValue={formData.email}
       />
       </Form.Group>
 
@@ -101,7 +101,7 @@ export default function SignUpForm(props) {
               type="password" 
               placeholder="Contraseña"
               name="password"
-              defaultValue={formtData.password}
+              defaultValue={formData.password}
             />    
           </Col>
           <Col> 
@@ -109,7 +109,7 @@ export default function SignUpForm(props) {
               type="password"
               placeholder="Repetir contraseña" 
               name="repeatPassword"
-              defaultValue={formtData.repeatPassword}
+              defaultValue={formData.repeatPassword}
             />    
           </Col>
         </Row>
