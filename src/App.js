@@ -1,18 +1,29 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Auth from './pages/auth';
 import { ToastContainer } from 'react-toastify';
+import { AuthContext } from './utils/contexts';
+import { isUserLogedApi } from './api/auth';
+import Routing from './routes/Routing';
 
 export default function App() {
+  //Use state para los estados de la aplicacion
   const [user, setUser] = useState(null);
+  const [loadUser, setLoadUser] = useState(false);
+  const [refreshCheckLogin, setRefreshCheckLogin] = useState(false);
+
+  useEffect(() => {
+    setUser(isUserLogedApi());
+    setRefreshCheckLogin(false);
+    setLoadUser(true);  //el estado que cambiara de pagina
+  }, [refreshCheckLogin]);
+  
+  if (!loadUser) return false;
+
 
  return (
-   <div>
+   <AuthContext.Provider value={user}>
 
-   {user? 
-     (<h1>Estas logeado</h1>) 
-     :(
-        <Auth />
-     )} 
+     {user ? (<Routing />) : (<Auth setRefreshCheckLogin={setRefreshCheckLogin}/>)} 
 
     <ToastContainer
        position="top-right"
@@ -25,6 +36,6 @@ export default function App() {
        draggable
        pauseOnHover
     />
-   </div>
+   </AuthContext.Provider>
  )
 }

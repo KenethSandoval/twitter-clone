@@ -12,7 +12,8 @@ import Logo from '../../assets/img/logo.png';
 
 import './Auth.scss';
 
-export default function Auth() {
+export default function Auth(props) {
+  const { setRefreshCheckLogin } = props;
   const [showModal, setShowModal] = useState(false);
   const [ contentModal, setContentModal ] = useState(null);
 
@@ -30,6 +31,7 @@ export default function Auth() {
         <RightComponent 
           openModal={openModal}
           setShowModal={setShowModal}
+          setRefreshCheckLogin={setRefreshCheckLogin} 
         />
         </Row>
       </Container>
@@ -66,7 +68,7 @@ function LeftComponent() {
 }
 
 function RightComponent(props) {
-  const { openModal, setShowModal } = props;
+  const { openModal, setShowModal, setRefreshCheckLogin } = props;
 
   return (
     <Col className="signin-signup__right" xs={ 6 }>
@@ -82,7 +84,7 @@ function RightComponent(props) {
         </Button>
         <Button 
           variant="outline-primary"
-          onClick={() => openModal(<SignInForm />)}
+          onClick={() => openModal(<SignInForm setRefreshCheckLogin={setRefreshCheckLogin}/>)}
         >
           Inicar sesión
         </Button>
