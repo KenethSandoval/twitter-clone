@@ -1,11 +1,13 @@
 import Reac from 'react';
 import './Home.scss';
+import BasicLayout from '../../layout/BasicLayout';
 
-export default function Home() {
+export default function Home(props) {
+  const { setRefreshCheckLogin } = props;
   return (
-    <div>
-      <h2>Estamos en la page Home</h2>
-    </div>
+    <BasicLayout className="home" setRefreshCheckLogin={setRefreshCheckLogin}>
+        <h2>Estamos en la page Home</h2>
+    </BasicLayout>
   )
 }
 

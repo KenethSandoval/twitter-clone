@@ -7,13 +7,14 @@ import {
 import {map} from 'lodash';
 import configRoutes from './configRoutes';
 
-export default function Routing() {
+export default function Routing(props) {
+  const { setRefreshCheckLogin } = props;
   return (
     <Router>
       <Switch>
         {map(configRoutes, (route, index) => (
           <Route key={index} path={route.path} exact={route.exact}>
-            <route.page />
+            <route.page setRefreshCheckLogin={setRefreshCheckLogin}/>
           </Route> 
         ))}
       </Switch>
