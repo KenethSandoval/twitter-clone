@@ -13,17 +13,18 @@ import {
 import { logoutApi } from "../../api/auth";
 
 import LogoWhite from '../../assets/img/logo-white.png'
+import useAuth from '../../hooks/userAuth';
 
 import "./LeftMenu.scss";
 
 export default function LeftMenu(props) {
   const { setRefreshCheckLogin } = props;
+  const user = useAuth();
   //funcion para cerrar sesion y hacerlo de forma reactiva con los componentes
   const logout = () => {
     logoutApi();
     setRefreshCheckLogin(true);
   }
-
   return (
     <div className="left-menu">
       <img className="logo" src={LogoWhite} alt="Twittor"/>
@@ -35,7 +36,7 @@ export default function LeftMenu(props) {
       <Link to="/users">
         <FontAwesomeIcon icon={faUsers} />Usuarios
       </Link>
-      <Link to="/profile">
+      <Link to={`/${user?._id}`}>
         <FontAwesomeIcon icon={faUser} /> Perfil
       </Link>
       <Link to="" onClick={logout}>  
