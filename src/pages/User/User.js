@@ -3,6 +3,7 @@ import { Button, Spinner } from 'react-bootstrap'
 import { toast } from 'react-toastify';
 import { withRouter } from 'react-router-dom'
 import BasicLayout from '../../layout/BasicLayout';
+import BannerAvatar from '../../components/User/BannerAvatar';
 import { getUserApi } from '../../api/user';
 
 import './User.scss';
@@ -27,11 +28,11 @@ function User(props) {
   return (
     <BasicLayout className="user">
       <div className="user__title">
-        <h2>{user.name}</h2>
+        <h2>
+          {user ? `${user.name} ${user.lastname}` : "El usuario no existe"}
+        </h2>
       </div>
-      <div>
-        Banner Usuario...  
-      </div>
+      <BannerAvatar user={user}/> 
       <div>Info usuario</div>
       <div className="user__tweets">Lista de tweets</div>
     </BasicLayout>
