@@ -13,7 +13,7 @@ import './SignInForm.scss'
 
 
 export default function SignInForm(props) {
-  const {setRefreshCheckLogin} = props;
+  const { setRefreshCheckLogin } = props;
   const [formData, setFormData] = useState(initValuesForm());
   const [signInLoading, setSignInLoading] = useState(false);
 

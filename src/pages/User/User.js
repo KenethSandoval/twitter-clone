@@ -4,7 +4,9 @@ import { toast } from 'react-toastify';
 import { withRouter } from 'react-router-dom'
 import BasicLayout from '../../layout/BasicLayout';
 import BannerAvatar from '../../components/User/BannerAvatar';
+import InfoUser from '../../components/User/InfoUser';
 import { getUserApi } from '../../api/user';
+import userAuth from '../../hooks/userAuth';
 
 import './User.scss';
 
@@ -12,6 +14,7 @@ function User(props) {
   //estado para ver la existencia del usario
   const [user, setUser] = useState(null);
   const { match } = props;
+  const loggedUser = userAuth();
   //cada vez que el params cambie la pagina trae un nuevo resultado 
   useEffect(() => {
     getUserApi(match.params.id).then(response => {
@@ -32,8 +35,8 @@ function User(props) {
           {user ? `${user.name} ${user.lastname}` : "El usuario no existe"}
         </h2>
       </div>
-      <BannerAvatar user={user}/> 
-      <div>Info usuario</div>
+      <BannerAvatar user={user} loggedUser={loggedUser}/> 
+      <InfoUser user={user}/>
       <div className="user__tweets">Lista de tweets</div>
     </BasicLayout>
   )

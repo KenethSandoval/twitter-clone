@@ -7,18 +7,17 @@ import Routing from './routes/Routing';
 
 export default function App() {
   //Use state para los estados de la aplicacion
-  const [user, setUser] = useState(null);
-  const [loadUser, setLoadUser] = useState(false);
-  const [refreshCheckLogin, setRefreshCheckLogin] = useState(false);
+ const [user, setUser] = useState(null);
+ const [loadUser, setLoadUser] = useState(false);
+ const [refreshCheckLogin, setRefreshCheckLogin] = useState(false);
 
-  useEffect(() => {
-    setUser(isUserLogedApi());
-    setRefreshCheckLogin(false);
-    setLoadUser(true);  //el estado que cambiara de pagina
-  }, [refreshCheckLogin]);
+ useEffect(() => {
+   setUser(isUserLogedApi());
+   setRefreshCheckLogin(false);
+   setLoadUser(true);  //el estado que cambiara de pagina
+ }, [refreshCheckLogin]);
   
-  if (!loadUser) return false;
-
+ if (!loadUser) return false;
 
  return (
    <AuthContext.Provider value={user}>
