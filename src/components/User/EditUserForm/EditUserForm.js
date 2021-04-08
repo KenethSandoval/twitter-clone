@@ -1,10 +1,12 @@
 import React, { useState, useCallback } from 'react';
-import { Form, Button, Row, Col } from 'react-bootstrap'
+import { Form, Button, Row, Col, Spinner } from 'react-bootstrap'
 import DatePicker from 'react-datepicker';
 import { useDropzone } from 'react-dropzone'
+import { toast } from 'react-toastify';
+
 import { API_HOST } from '../../../utils/constant';
 import { Camera } from '../../../utils/icons';
-
+import { uploadBannerApi, uploadAvatarApi, updateInfoApi } from '../../../api/user';
 
 import './EditUserForm.scss'
 
@@ -23,6 +25,9 @@ export default function EditUserForm(props) {
     user?.avatar ? `${API_HOST}/obtenerAvatar?id=${user.id}` : null
   );
   const [avatarFile, setAvatarFile] = useState(null);
+
+  //estado para el spinner
+  const [loading, setLoading] = useState(false);
 
   //BANNER
   //eslint-disable-next-line react-hooks/exhaustive-deps
@@ -64,8 +69,31 @@ export default function EditUserForm(props) {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   }
 
-  const onSubmit = (e) => {
+  const onSubmit = async (e) => {
     e.preventDefault();
+    setLoading(true);
+
+    if(bannerFile) {
+      await uploadBannerApi(bannerFile).catch(() => {
+        toast.error("Error al subir el nuevo banner");
+      });
+    }
+
+    if (avatarFile) {
+      await uploadAvatarApi(avatarFile).catch(() => {
+        toast.error("Error al subir el nuevo avatar.");
+      });
+    }
+
+    await updateInfoApi(formData).then(() => {
+      setShowModal(false);
+    })
+    .catch(() => {
+      toast.error("Error al actualizar los datos");
+    });
+    
+    setLoading(false);
+    window.location.reload();
   }
 
   return (
@@ -81,8 +109,7 @@ export default function EditUserForm(props) {
       </div>
 
       <div
-        className="avatar"
-        style={{ backgroundImage: `url('${avatarUrl}')` }}
+        className="avatar" style={{ backgroundImage: `url('${avatarUrl}')` }}
         {...getRootAvatarProps()}
       >
         <input {...getInputAvatarProps()} />
@@ -119,8 +146,8 @@ export default function EditUserForm(props) {
              row="3"
              placeholder="Agrega tu biografia"
              type="text"
-             name="biograpy"
-             defaultValue={formData.biograpy}
+             name="biography"
+             defaultValue={formData.biography}
              onChange={onChange}
          />
         </Form.Group>
@@ -130,7 +157,7 @@ export default function EditUserForm(props) {
             type="text"
             placeholder="Sitio web"
             name="website"
-            defaultValue={formData.website}
+            defaultValue={formData.webSite}
             onChange={onChange}
           />
         </Form.Group>
@@ -139,11 +166,14 @@ export default function EditUserForm(props) {
           <DatePicker 
             placeholder="Fecha de nacimiento"
             selected={new Date(formData.birthdate)}
+            onChange={ value => 
+              setFormData({ ...formData, birthdate: value })
+            }
           />
         </Form.Group>
 
          <Button className="btn-submit" variant="primary" type="submit">
-          Actualizar
+          { loading && <Spinner animation="border" size="sm" /> } Actualizar
          </Button>
       </Form>
     </div>
@@ -154,9 +184,9 @@ function initialValue(user) {
   return {
     name: user.name || "",
     lastname: user.lastname || "",
-    biograpy: user.biograpy || "",
+    biography: user.biography || "",
     location: user.location || "",
-    website: user.website || "",
+    webSite: user.webSite || "",
     birthdate: user.birthdate || "",
   }
 }
