@@ -6,6 +6,7 @@ import BasicLayout from '../../layout/BasicLayout';
 import BannerAvatar from '../../components/User/BannerAvatar';
 import InfoUser from '../../components/User/InfoUser';
 import { getUserApi } from '../../api/user';
+import { getUserTweetApi } from '../../api/tweet';
 import userAuth from '../../hooks/userAuth';
 
 import './User.scss';
@@ -13,8 +14,10 @@ import './User.scss';
 function User(props) {
   //estado para ver la existencia del usario
   const [user, setUser] = useState(null);
+  const [tweets, setTweets] = useState(null);
   const { match } = props;
   const loggedUser = userAuth();
+
   //cada vez que el params cambie la pagina trae un nuevo resultado 
   useEffect(() => {
     getUserApi(match.params.id).then(response => {
@@ -27,7 +30,17 @@ function User(props) {
       toast.error("El usuario que has visitado no existe"); 
     });
   }, [match.params]);
-  
+ 
+  useEffect(() => {
+     getUserTweetApi(match.params.id, 1)
+      .then(response => {
+        setTweets(response);
+      })
+      .catch(() => {
+        setTweets([]);
+      });
+  }, [match.params]);
+ 
   return (
     <BasicLayout className="user">
       <div className="user__title">

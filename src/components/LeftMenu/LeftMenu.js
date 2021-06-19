@@ -26,8 +26,8 @@ export default function LeftMenu(props) {
   const user = useAuth();
   //funcion para cerrar sesion y hacerlo de forma reactiva con los componentes
   const logout = () => {
-    setRefreshCheckLogin(true);
-    logoutApi();
+    logoutApi(); 
+    //setRefreshCheckLogin(true);
   }
   return (
     <div className="left-menu">

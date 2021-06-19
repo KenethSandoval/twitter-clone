@@ -1,7 +1,6 @@
 import { API_HOST, TOKEN } from '../utils/constant';
 import jwtDecode from 'jwt-decode';
 
-
 export function signUpApi(user) {
   const url = `${API_HOST}/registro`; 
   const userTemp = {
